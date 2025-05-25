@@ -133,9 +133,6 @@ public OptionalInt reduce(IntBinaryOperator op) {
 
 Die `reduce`-Methode hat noch eine zweite Variante, die zu der Lambda-Operation einen Wert namens `identity` erwartet. In dem Fall wird kein mit `OptionalInt` "eingewickelter" (gewrappter) Wert zurückgeliefert. Denn selbst bei einem leeren Strom gibt es einen Ergebniswert. Die obige `reduce`-Methode hingegen kennt keinen Wert, der bei einem leeren Strom zurückgegeben werden kann und arbeitet deshalb mit `OptionalInt`.
 
-* **Ziel des Prototyps:** Veranschaulichen, wie Streams **grundlegend** funktionieren, ohne die parallele Aufteilung und Zusatzmetadaten.
-* Durch den Fokus auf das Iterator-Pattern bleibt der Prototyp **leicht verständlich** und eignet sich ideal für Lehr- und Demonstrationszwecke.
-
 # Links
 
 * `java.util.stream`: https://docs.oracle.com/en/java/javase/24/docs/api/java.base/java/util/stream/package-summary.html
