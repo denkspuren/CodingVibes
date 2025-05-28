@@ -96,6 +96,46 @@ public class SimpleIntStream {
         });
     }
 
+    /** Skip: überspringt n Elemente */
+    public SimpleIntStream skip(long n) {
+        return new SimpleIntStream(() -> new PrimitiveIterator.OfInt() {
+            final PrimitiveIterator.OfInt it = iteratorSupplier.get();
+            private long counter = n;
+            private boolean hasSkipped = false;
+
+            private void goSkipping() {            
+                while (counter-- > 0 && it.hasNext()) it.nextInt();
+                hasSkipped = true;
+            }
+
+            @Override public boolean hasNext() {
+                if (!hasSkipped) goSkipping();
+                return it.hasNext();
+            }
+
+            @Override public int nextInt() {
+                return it.next();
+            }
+        });
+    }
+
+    /** Limit: behält nur die ersten n Elemente */
+    public SimpleIntStream limit(long n) {
+        return new SimpleIntStream(() -> new PrimitiveIterator.OfInt() {
+            final PrimitiveIterator.OfInt it = iteratorSupplier.get();
+            private long counter = 0;
+
+            @Override public boolean hasNext() {
+                return counter < n && it.hasNext();
+            }
+
+            @Override public int nextInt() {
+                counter++;
+                return it.next();
+            }
+        });
+    }
+
     /** Map: wendet mapper auf jedes Element an */
     public SimpleIntStream map(IntUnaryOperator mapper) {
         return new SimpleIntStream(() -> new PrimitiveIterator.OfInt() {
@@ -135,9 +175,7 @@ public class SimpleIntStream {
     }
 
     /** ForEach: verarbeitet jedes Element mit action */
-    public void forEach(IntConsumer action) {
-        peek(action).reduce((a, b) -> a);
-    }
+    public void forEach(IntConsumer action) { peek(action).reduce((a, b) -> a); }
 
     /** Sum: Addiert alle Elemente */
     public int sum() { return reduce(0, (a, b) -> a + b); }
@@ -154,6 +192,9 @@ public class SimpleIntStream {
         if (count == 0) { return OptionalDouble.empty(); }
         return OptionalDouble.of((double) sum() / count);
     }
+
+    // FindFirst: Liefere erstes Element im Stream aus */
+    public OptionalInt findFirst() { return limit(1).reduce((a, b) -> a); }
 
     // ─── Test / Beispiel ────────────────────────────────────────────────────
 
