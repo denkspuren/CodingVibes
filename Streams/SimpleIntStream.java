@@ -34,6 +34,11 @@ public class SimpleIntStream {
         });
     }
 
+    /** Wandelt einen Iterator in einen Stream */
+    public static SimpleIntStream of(PrimitiveIterator.OfInt it) {
+        return new SimpleIntStream(() -> it);
+    }
+
     /** Leerer Stream */
     public static SimpleIntStream empty() {
         return of();
@@ -145,6 +150,14 @@ public class SimpleIntStream {
         });
     }
 
+    public <T> SimpleStream<T> mapToObj(IntFunction<T> mapper) {
+        return SimpleStream.of(new Iterator<T>() {
+            final PrimitiveIterator.OfInt it = iteratorSupplier.get();
+            @Override public boolean hasNext() { return it.hasNext(); }
+            @Override public T next() { return mapper.apply(it.nextInt()); }
+        });
+    }
+
     /** Peek: verarbeite jedes Element mit action */
     public SimpleIntStream peek(IntConsumer action) {
         return map(n -> { action.accept(n); return n; });
@@ -191,6 +204,13 @@ public class SimpleIntStream {
         int count = count();
         if (count == 0) { return OptionalDouble.empty(); }
         return OptionalDouble.of((double) sum() / count);
+    }
+    public OptionalDouble average2() {
+        record Pair(int value, int count) {}
+        Pair result = mapToObj(i -> new Pair(i, 1)).
+                      reduce(new Pair(0, 0), (a, b) -> new Pair(a.value + b.value, a.count + 1));
+        if (result.count == 0) { return OptionalDouble.empty(); }
+        return OptionalDouble.of((double) result.value / result.count);
     }
 
     // FindFirst: Liefere erstes Element im Stream aus */

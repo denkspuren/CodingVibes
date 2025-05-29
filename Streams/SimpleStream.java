@@ -20,6 +20,11 @@ public class SimpleStream<T> {
         });
     }
 
+    /** Wandelt einen Iterator in einen Stream */
+    public static <T> SimpleStream<T> of(Iterator<T> it) {
+        return new SimpleStream<T>(() -> it);
+    }
+
     public static <T> SimpleStream<T> empty() {
         return SimpleStream.<T>of();
     }
@@ -45,10 +50,10 @@ public class SimpleStream<T> {
         });
     }
 
-
+    // ─── Intermediate-Stages ────────────────────────────────────────────────
 
     /** Filter: behält nur diejenigen Elemente, für die predicate true ist */
-    public SimpleStream<T> filter(Predicate<T> predicate) { // public <T> SimpleStream<T> filter(...) FAILED!
+    public SimpleStream<T> filter(Predicate<? super T> predicate) { // public <T> SimpleStream<T> filter(...) FAILED!
         return new SimpleStream<>(() -> new Iterator<T>() {
             final Iterator<T> it = iteratorSupplier.get();
             private T next;
@@ -130,5 +135,49 @@ public class SimpleStream<T> {
         });
     }
 
+    public SimpleIntStream mapToInt(ToIntFunction<? super T> mapper) { // public <T> SimpleIntStream mapToInt(... FAILED!
+        return SimpleIntStream.of(new PrimitiveIterator.OfInt() {
+            final Iterator<T> it = iteratorSupplier.get();
+            @Override public boolean hasNext() { return it.hasNext(); }
+            @Override public int nextInt()  { return mapper.applyAsInt(it.next()); }
+        });
+    }
 
+    /** Peek: verarbeite jedes Element mit action */
+    public SimpleStream<T> peek(Consumer<? super T> action) {
+        return map(n -> { action.accept(n); return n; });
+    }
+
+    // ─── Terminal-Stages ────────────────────────────────────────────────────
+
+    /** Reduce: kombiniert mit identity beginnend alle Element mit op zu einem einzigen Ergebnis */
+    public T reduce(T identity, BinaryOperator<T> op) {
+        Iterator<T> it = iteratorSupplier.get();
+        if (!it.hasNext()) return identity;
+        T result = identity;
+        while (it.hasNext()) {
+            result = op.apply(result, it.next());
+        }
+        return result;
+    }
+    // TEST: SimpleStream.<Integer>of(1,2,3).map(i -> i.toString()).reduce("", (x, y) -> x + y)
+
+    /** Reduce: kombiniert alle Elemente mit op zu einem einzigen Ergebnis */
+    public Optional<T> reduce(BinaryOperator<T> op) {
+        Iterator<T> it = iteratorSupplier.get();
+        if (!it.hasNext()) return Optional.<T>empty();
+        T result = it.next();
+        while (it.hasNext()) {
+            result = op.apply(result, it.next());
+        }
+        return Optional.<T>of(result);
+    }
+
+    /** ForEach: verarbeitet jedes Element mit action */
+    public void forEach(Consumer<T> action) { peek(action).reduce((a, b) -> a); }
+
+    // FindFirst: Liefere erstes Element im Stream aus */
+    public Optional<T> findFirst() { return limit(1).reduce((a, b) -> a); }
+
+    public int count() { return mapToInt(i -> 1).sum(); }
 }
