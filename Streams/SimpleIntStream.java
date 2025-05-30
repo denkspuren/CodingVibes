@@ -199,13 +199,8 @@ public class SimpleIntStream {
     /** Count: Zählt die Anzahl der Elemente */
     public int count() { return map(n -> 1).sum(); }
 
-    /** Average: Mittelwert aller Elemente (ineffiziente Umsetzung) */
+    /** Average: Mittelwert aller Elemente */
     public OptionalDouble average() {
-        int count = count();
-        if (count == 0) { return OptionalDouble.empty(); }
-        return OptionalDouble.of((double) sum() / count);
-    }
-    public OptionalDouble average2() {
         record Pair(int value, int count) {}
         Pair result = mapToObj(i -> new Pair(i, 1)).
                       reduce(new Pair(0, 0), (a, b) -> new Pair(a.value + b.value, a.count + 1));
