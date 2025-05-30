@@ -1,6 +1,4 @@
-// Runs with Java 24 or higher; in Java 24 preview features must be enabled
-//
-// java --enable-preview StreamTest.java
+
 
 // assertTrue and assertFalse make your tests somewhat more convenient
 boolean assertBool(Boolean criteria, String intent, Object... values) {
