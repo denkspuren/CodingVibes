@@ -36,13 +36,58 @@ Das macht den Code:
 * **typsicher** (kein Cast nötig, der zur Laufzeit schiefgehen kann)
 * **lesbar und dokumentierend** (die API sagt direkt, mit welchem Typ sie arbeitet)
 
+---
 
 * Typparameter werden in Deklarationsköpfen von Klassen, Interfaces und Methoden verwendet.
 * Typvariablen sind Platzhalter für einen konkreten Typen, sie beziehen sich namentlich auf einen Typparameter im Kopf des Deklarationskonstrukts. Typvariablen können überall dort im Rumpf einer Deklaration verwendet werden, wo ein konkreter Referenztyp stehen könnte. 
 * Typargumente belegen einen Typparameter mit einem Typ, wenn die typparametrisierte Klasse bzw. das typparametrisierte Interface instanziiert oder eine typparametrisierte Methode aufgerufen wird.
 
+---
 
-* Typparameter werden im Deklarationskopf von Klassen, Interfaces oder Methoden definiert. Sie legen formale Platzhalter für Typen fest.
+### Typparameter, Typvariablen und Typargumente
+
+Man unterscheidet Typparameter, Typvariablen und Typargumente. Um sich den Unterschied zwischen Parameter, Variable und Argument zu verdeutlichen, sei an die Begrifflichkeiten bei Methoden und Konstruktoren erinnert.
+
+#### Methoden und Konstruktoren sind parametrisierbare Codeblöcke
+
+Im Kopf einer Methode oder eines Konstruktors werden Parameter deklariert. Im Rumpf stehen sie als Variablen zu Verfügung. Und ein Wert wird beim Aufruf, also der Verwendung der Methode bzw. Konstruktor, als Argument übergeben.
+
+Ein Beispiel:
+
+```
+int add(int x, int y) { return x + y;)
+```
+
+* Eine Methode bzw. ein Konstruktor deklariert einen benamten Codeblock, der über die Angabe `int x` und `int y` parametrisiert wird; `int x` und `int y` sind die **Parameter** der Methode. Der Codeblock (der Deklarationsrumpf) ist der Anteil, der in geschweiften Klammern direkt nach Rückgabetyp und Signatur folgt.
+* Damit können im Rumpf der Methode bzw. des Konstruktor die **Variablen** `x` und `y` verwendet werden.
+* Beim Aufruf der Methode mit Werten für die **Argumente** (z.B. `add(2, 3)`), wird der Variablen `x` der Wert `2` und der Variablen `y` der Wert `3` zugewiesen, bevor mit der Ausführung des Codes begonnen wird. 
+
+#### Methoden und Konstruktoren können zudem typparametrisiert werden
+
+Die Deklaration einer Variablen (im Rumpf einer Methode bzw. eines Konstruktors oder im Kopf als Parameter) folgt der Konvention:
+
+```
+<Typname> <Variablenname> // mit bzw. ohne Initialisierungsausdruck
+```
+
+```
+<Typvariablenname> <Variablenname> // mit bzw. ohne Initialisierungsausdruck
+```
+
+
+
+
+
+* Typparameter werden im Deklarationskopf von Klassen, Interfaces oder Methoden definiert.
+
+* Damit können im Rumpf der Deklaration Typvariablen verwendet werden, die gleichermaßen als Platzhalter fungieren, an denen ein konkreter Referenztyp stehen könnte.
+
+* Ein Typargument liefert einen konkreten Referenztyp oder eine Typvariable als Typ, der bei der Verwendung des Deklarationskopfes (Instanziierung bzw. Methodenaufruf) bestimmt wird und somit den Typwert den Typvariablen im Rumpf der Deklaration zuweist.
+
+
+
+
+Sie legen formale Platzhalter für Typen fest.
 
 * Typvariablen sind Verweise auf diese Typparameter im Rumpf einer Deklaration. Sie können überall dort eingesetzt werden, wo ein konkreter Referenztyp erlaubt ist – z. B. als Rückgabe-, Parameter- oder Feldtyp.
 
