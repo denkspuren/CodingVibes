@@ -211,26 +211,4 @@ public class SimpleIntStream {
     // FindFirst: Liefere erstes Element im Stream aus */
     public OptionalInt findFirst() { return limit(1).reduce((a, b) -> a); }
 
-    // ─── Test / Beispiel ────────────────────────────────────────────────────
-
-    public static void main(String[] args) {
-        // Beispiel: Quadrate gerader Zahlen von 0 bis 9 aufsummieren
-        OptionalInt sumOfSquares = SimpleIntStream
-            .range(0, 10)                     // 0,1,2,…,9
-            .filter(n -> n % 2 == 0)          // 0,2,4,6,8
-            .map(n -> n * n)                  // 0,4,16,36,64
-            .reduce((a, b) -> a + b);         // 0+4+16+36+64 = 120
-
-        sumOfSquares.ifPresentOrElse(
-            v -> System.out.println("Summe der Quadrate: " + v),
-            () -> System.out.println("Kein Wert!")
-        );
-
-        int sumOfSquares2 = SimpleIntStream
-            .range(0, 10)                     // 0,1,2,…,9
-            .filter(n -> n % 2 == 0)          // 0,2,4,6,8
-            .map(n -> n * n)                  // 0,4,16,36,64
-            .sum();                           // 0+4+16+36+64 = 120
-        System.out.println("Summe der Quadrate: " + sumOfSquares2);
-    }
 }
