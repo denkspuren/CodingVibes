@@ -1,4 +1,4 @@
-# Nachbau von `IntStream` und `Stream``
+# Nachbau von `IntStream` und `Stream`
 
 Das Nachbauen von Programmierkonzepten ist ein Zugang, um sich zu verdeutlichen, wie etwas funktioniert.
 
