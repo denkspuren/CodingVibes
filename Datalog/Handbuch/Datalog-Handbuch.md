@@ -1,23 +1,9 @@
-# Datalog — ein Handbuch
-
-*Historische Einordnung, systematische Einführung und praxisnahe Beispiele,
-allesamt mit der begleitenden Datalog-Engine (`Datalog.java`) ausgeführt und geprüft.*
-
 ---
-
-## Inhalt
-
-1. [Was Datalog ist — in einem Absatz](#1-was-datalog-ist--in-einem-absatz)
-2. [Teil I — Historische und aktuelle Einordnung](#teil-i--historische-und-aktuelle-einordnung)
-3. [Teil II — Datalog als Sprache](#teil-ii--datalog-als-sprache)
-4. [Teil III — Programmieren mit Datalog](#teil-iii--programmieren-mit-datalog)
-5. [Teil IV — Grenzen, Semantik-Fallstricke und Ausblick](#teil-iv--grenzen-semantik-fallstricke-und-ausblick)
-6. [Anhang — Referenz der Engine und Ausführung](#anhang--referenz-der-engine-und-ausführung)
-
-Alle Programm- und Abfrage-Ergebnisse in diesem Handbuch stammen aus tatsächlichen
-Läufen der begleitenden Engine. Die zugehörigen Programme liegen im Ordner
-`examples/`; jede REPL-Sitzung lässt sich eins zu eins nachvollziehen.
-
+title: "Ein Handbuch zu Datalog"
+subtitle: "Historische Einordnung und Einführung"
+date: "2026-07-14"
+author: "Claude.AI (Opus 4.8, hoch)"
+lang: de
 ---
 
 ## 1. Was Datalog ist — in einem Absatz
@@ -32,20 +18,11 @@ Auswertung terminiert und ein eindeutiges Ergebnis besitzt. Man beschreibt *was*
 gelten soll, nicht *wie* es zu berechnen ist; um die Berechnung kümmert sich die
 Engine.
 
----
-
 ## Teil I — Historische und aktuelle Einordnung
 
 ### Wurzeln: Logik trifft Datenbanken (1970er)
 
-Datalog entstand am Zusammenfluss zweier Strömungen. Die eine ist die **Logik-
-programmierung**: Anfang der 1970er formulierten Alain Colmerauer und Robert
-Kowalski die Idee, Hornklauseln als Programme zu lesen — daraus wurde Prolog. Die
-andere ist die **relationale Datenbanktheorie**: 1970 formalisierte Edgar F. Codd
-Datenbanken über relationale Algebra und relationalen Kalkül. Beide Welten trafen
-sich in den **deduktiven Datenbanken** — Datenbanksystemen mit Schlussfolgerungs-
-fähigkeit —, deren Paradigma unter anderem der von Jack Minker herausgegebene Band
-*Logic and Data Bases* (1978) prägte.
+Datalog entstand am Zusammenfluss zweier Strömungen. Die eine ist die **Logikprogrammierung**: Anfang der 1970er formulierten Alain Colmerauer und Robert Kowalski die Idee, Hornklauseln als Programme zu lesen — daraus wurde Prolog. Die andere ist die **relationale Datenbanktheorie**: 1970 formalisierte Edgar F. Codd Datenbanken über relationale Algebra und relationalen Kalkül. Beide Welten trafen sich in den **deduktiven Datenbanken** — Datenbanksystemen mit Schlussfolgerungsfähigkeit —, deren Paradigma unter anderem der von Jack Minker herausgegebene Band *Logic and Data Bases* (1978) prägte.
 
 Der Antrieb war eine konkrete Lücke: relationale Algebra und Kalkül können einfache,
 aber unentbehrliche Operationen wie die transitive Hülle eines Graphen *nicht*
@@ -53,12 +30,7 @@ ausdrücken. Genau diese Rekursion liefert Datalog.
 
 ### Der Name und die Formalisierung (1980er)
 
-Der Begriff „Datalog" wurde in den 1980er-Jahren geprägt und wird dem Datenbank-
-forscher David Maier zugeschrieben (in manchen Quellen gemeinsam mit David S.
-Warren genannt). Technisch ist Datalog ein **funktionssymbolfreier Ausschnitt von
-Prolog**: Terme sind nur Konstanten und Variablen. Diese Einschränkung ist der
-entscheidende Kunstgriff — sie macht die **Bottom-up-Auswertung** (von den Fakten
-aufwärts bis zum Fixpunkt) berechenbar und terminierend, im Gegensatz zu Prologs
+Der Begriff „Datalog" wurde in den 1980er-Jahren geprägt und wird dem Datenbankforscher David Maier zugeschrieben (in manchen Quellen gemeinsam mit David S. Warren genannt). Technisch ist Datalog ein **funktionssymbolfreier Ausschnitt von Prolog**: Terme sind nur Konstanten und Variablen. Diese Einschränkung ist der entscheidende Kunstgriff — sie macht die **Bottom-up-Auswertung** (von den Fakten aufwärts bis zum Fixpunkt) berechenbar und terminierend, im Gegensatz zu Prologs
 Top-down-Suche, die in Endlosschleifen laufen kann.
 
 ### Theoretische Meilensteine
@@ -75,7 +47,7 @@ die begleitende — noch stehen:
 - **Magic Sets (1986).** Bancilhon, Maier, Sagiv und Ullman zeigten, wie man ein
   Programm so umschreibt, dass die Bottom-up-Auswertung nur die für eine konkrete
   Anfrage *relevanten* Fakten erzeugt — bedarfsgesteuerte Auswertung auf großen
-  Datenbeständen. (Genau hier setzt die Thesis an, die diesem Handbuch vorausging.)
+  Datenbeständen.
 - **Stratifizierte Negation (Mitte/Ende der 1980er).** Um Negation sinnvoll zu
   erlauben, ordnet man Prädikate in Schichten (Strata) an, sodass ein negiertes
   Prädikat stets vollständig berechnet ist, bevor es benutzt wird.
@@ -84,8 +56,7 @@ die begleitende — noch stehen:
   das heutige Answer-Set-Programming.
 
 Als Standardreferenz dieser Ära gilt Ullmans *Principles of Database and
-Knowledge-Base Systems* (1988/89) — dieselbe Quelle, auf die sich auch die
-vorausgehende Thesis stützt.
+Knowledge-Base Systems* (1988/89).
 
 ### Niedergang und Wiederaufstieg
 
@@ -106,8 +77,7 @@ produktiven Systemen. Die wichtigsten Stränge:
 - **Statische Programmanalyse.** Der prominenteste Anwendungsfall. Die Engine
   **Soufflé** übersetzt Datalog-Regeln in hochoptimierten C++-Code und erreicht damit
   die Leistung handgeschriebener Analysen; das Doop-Framework etwa formuliert
-  Points-to-Analysen für große Codebasen als Datalog-Programme. Die vorausgehende
-  Thesis („Tofino") gehört in genau diese Familie von Engines.
+  Points-to-Analysen für große Codebasen als Datalog-Programme.
 - **Wissensgraphen und Ontologien.** Systeme wie **RDFox** und **Vadalog** nutzen
   Datalog als Schlussmaschine über RDF-Daten; Fragmente von OWL 2 RL lassen sich
   direkt in Datalog-Regeln übersetzen.
@@ -117,15 +87,13 @@ produktiven Systemen. Die wichtigsten Stränge:
   SQL- bzw. Spalten-Datenbanken.
 - **Anhaltende Forschungsdynamik.** Neben Engines wie **Nemo** (TU Dresden) und
   Erweiterungen um Gitter und SMT (Flix, Datafun, Formulog) erscheinen laufend neue
-  Arbeiten zu Auswertung und Compilern (etwa Flan, FlowLog, GPU-basierte Datalog-
-  Auswertung, 2024–2025). Überblicke geben die Monografie *Modern Datalog Engines*
+  Arbeiten zu Auswertung und Compilern (etwa Flan, FlowLog, GPU-basierte Datalog-Auswertung,
+  2024–2025). Überblicke geben die Monografie *Modern Datalog Engines*
   (Ketsman & Koutris) und Krötzschs *Modern Datalog: Concepts, Methods, Applications*.
 
 Kurz: Datalog wird dort geschätzt, wo man **rekursive Ableitungen über strukturierten
 Daten deklarativ, wartbar und effizient** ausdrücken will — von Compiler-Analysen
 über Zugriffskontrolle bis zu Wissensgraphen.
-
----
 
 ## Teil II — Datalog als Sprache
 
@@ -206,8 +174,6 @@ Arithmetik `+ - * / %` innerhalb von Vergleichen. Das `=` wirkt dabei auch als
 **Binder**: Steht auf einer Seite eine noch ungebundene Variable und ist die andere
 Seite auswertbar, wird gebunden — etwa `M = N + 1`. Die Division `/` ist
 Fließkomma-Division (`7 / 2` ergibt `3.5`); geht sie auf, bleibt das Ergebnis ganz.
-
----
 
 ## Teil III — Programmieren mit Datalog
 
@@ -445,8 +411,6 @@ Weil `unsafe` vollständig berechnet ist, bevor `reach` es abfragt, „sieht" de
 Anti-Join stets die komplette Menge — genau das ist die Garantie, die die
 Stratifizierung liefert.
 
----
-
 ## Teil IV — Grenzen, Semantik-Fallstricke und Ausblick
 
 ### 4.1 Wenn ein Programm abgelehnt wird
@@ -509,17 +473,15 @@ nicht braucht. Hier setzt die **Magic-Sets-Transformation** an — sie schreibt 
 Programm so um, dass nur die für die Anfrage relevanten Fakten entstehen, und
 verwandelt bei Erreichbarkeitsanfragen quadratischen in linearen Aufwand. Die
 Kombination von Magic Sets mit stratifizierter Negation ist überraschend subtil
-(verfrühte Anti-Joins) und war Gegenstand der Thesis, die diesem Handbuch vorausging.
+(verfrühte Anti-Joins).
 
 ### 4.4 Ausblick
 
 Wer über den stratifizierten Kern hinaus will, findet natürliche nächste Schritte in
 semi-naiver Auswertung (Effizienz), Aggregaten, gut-fundierter bzw. stabiler Semantik
 (nicht-stratifizierbare Programme) und eben Magic Sets (bedarfsgesteuerte Auswertung).
-Jeder dieser Schritte ist gut untersucht; die im Teil I genannten Überblicks-
-arbeiten sind dafür der beste Einstieg.
-
----
+Jeder dieser Schritte ist gut untersucht; die im Teil I genannten Überblicksarbeiten
+sind dafür der beste Einstieg.
 
 ## Anhang — Referenz der Engine und Ausführung
 
