@@ -1,0 +1,15 @@
+// Thesis Listing 13 - "reach and filter": the negated predicate `blocked`
+// is itself derived from the recursive `reach`. This is the example the
+// thesis uses to show the SMST ordering problem. Under plain STRATIFIED
+// evaluation (what our engine does) the answer is correct.
+// REPL query:  safe(1, Y).
+// Expected:    Y = 2, 3   (NOT 4: node 4 is reachable from 9 and thus blocked)
+
+link(1, 2). link(2, 3). link(3, 4). link(9, 4).
+
+reach(X, Y) :- link(X, Y).
+reach(X, Y) :- link(X, Z), reach(Z, Y).
+blocked(Y)  :- reach(9, Y).
+safe(X, Y)  :- reach(X, Y), not blocked(Y).
+
+//test safe(1, Y). => Y=2 ; Y=3

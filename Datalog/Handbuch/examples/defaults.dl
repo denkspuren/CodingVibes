@@ -1,0 +1,10 @@
+// Default with exceptions (nonmonotonic reasoning): birds fly, unless abnormal.
+bird(tweety). bird(polly). bird(pingu).
+penguin(tweety). penguin(pingu).
+
+abnormal(X) :- penguin(X).
+flies(X)    :- bird(X), not abnormal(X).
+
+//test flies(X). => X=polly
+
+//test abnormal(X). => X=tweety ; X=pingu

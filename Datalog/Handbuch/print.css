@@ -1,0 +1,168 @@
+/* =====================================================================
+   Print stylesheet for WeasyPrint (CSS Paged Media Level 3).
+   Features: A4 geometry, running header/footer with page numbers,
+   automatic hyphenation, a title page, and a TOC with page numbers.
+   Uses only WeasyPrint-supported properties (no responsive-web CSS),
+   so pandoc's default-stylesheet warnings do not apply here.
+   ===================================================================== */
+
+/* ---- Page geometry, running header and footer ---------------------- */
+@page {
+  size: A4;
+  margin: 24mm 22mm 22mm 22mm;
+
+  @top-left {
+    content: "Datalog-Handbuch";
+    font: 8pt "Helvetica Neue", Arial, sans-serif;
+    color: #9098a0;
+  }
+  @top-right {
+    content: string(section);          /* current chapter title */
+    font: 8pt "Helvetica Neue", Arial, sans-serif;
+    color: #9098a0;
+  }
+  @bottom-center {
+    content: counter(page) " / " counter(pages);
+    font: 8pt "Helvetica Neue", Arial, sans-serif;
+    color: #9098a0;
+  }
+}
+
+/* Title page: no header/footer */
+@page :first {
+  @top-left     { content: normal; }
+  @top-right    { content: normal; }
+  @bottom-center{ content: normal; }
+}
+
+/* ---- Base typography ---------------------------------------------- */
+html {
+  font-size: 10.8pt;
+  hyphens: auto;                       /* Pyphen ships a German dictionary */
+}
+body {
+  font-family: "Palatino", "Palatino Linotype", "Georgia", "Times New Roman", serif;
+  line-height: 1.42;
+  text-align: justify;
+  color: #1b1b1b;
+}
+
+/* ---- Title page ---------------------------------------------------- */
+#title-block-header {
+  text-align: center;
+  margin-top: 60mm;
+  break-after: page;
+}
+#title-block-header .title {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 30pt;
+  font-weight: 700;
+  color: #1a3a5a;
+  margin: 0 0 7mm 0;
+  border: none;
+}
+#title-block-header .subtitle {
+  font-size: 12.5pt;
+  font-style: italic;
+  color: #555;
+  margin: 0 18mm;
+  line-height: 1.4;
+}
+#title-block-header .date {
+  margin-top: 12mm;
+  font-size: 10pt;
+  color: #8a8a8a;
+}
+
+/* ---- Table of contents -------------------------------------------- */
+nav#TOC { break-after: page; }
+nav#TOC .toc-title {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-size: 15pt;
+  font-weight: 700;
+  color: #1a3a5a;
+  margin: 0 0 5mm 0;
+}
+nav#TOC ul { list-style: none; padding-left: 0; margin: 0; }
+nav#TOC ul ul { padding-left: 7mm; }
+nav#TOC li { margin: 1.6mm 0; }
+nav#TOC a {
+  text-decoration: none;
+  color: #1b1b1b;
+}
+nav#TOC a::after {                     /* dotted leader + page number */
+  content: leader('. ') target-counter(attr(href url), page);
+  color: #9098a0;
+}
+nav#TOC > ul > li > a {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600;
+  color: #1a3a5a;
+}
+
+/* ---- Headings ------------------------------------------------------ */
+h1, h2, h3, h4 {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: #1a3a5a;
+  line-height: 1.2;
+}
+h2 {
+  font-size: 17pt;
+  break-before: page;                  /* each chapter starts on a new page */
+  break-after: avoid;
+  border-bottom: 1.4pt solid #1a3a5a;
+  padding-bottom: 2mm;
+  margin: 0 0 5mm 0;
+  string-set: section content(text);   /* feeds the running header */
+}
+h3 { font-size: 12.5pt; margin: 7mm 0 2mm 0; break-after: avoid; }
+h4 { font-size: 11pt;   margin: 5mm 0 2mm 0; break-after: avoid; }
+p  { margin: 0 0 2.6mm 0; orphans: 2; widows: 2; }
+
+/* ---- Code ---------------------------------------------------------- */
+pre, code {
+  font-family: "SF Mono", "Menlo", "Consolas", "DejaVu Sans Mono", monospace;
+}
+code {
+  font-size: 9.2pt;
+  background: #f3f4f6;
+  padding: 0.3pt 2pt;
+  border-radius: 2pt;
+}
+pre {
+  background: #f6f8fa;
+  border: 0.5pt solid #e1e4e8;
+  border-radius: 3pt;
+  padding: 3mm 4mm;
+  font-size: 8.6pt;
+  line-height: 1.32;
+  white-space: pre-wrap;               /* wrap long lines instead of clipping */
+  word-wrap: break-word;
+  break-inside: avoid;
+}
+pre code { background: none; padding: 0; font-size: inherit; }
+
+/* ---- Tables -------------------------------------------------------- */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 3mm 0;
+  font-size: 9.3pt;
+  break-inside: avoid;
+}
+th, td {
+  border: 0.5pt solid #cfd4da;
+  padding: 1.4mm 2.4mm;
+  text-align: left;
+  vertical-align: top;
+}
+thead th {
+  background: #eef2f6;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---- Misc ---------------------------------------------------------- */
+a { color: #1a5aa0; }
+strong { color: #111; }
+blockquote { border-left: 2pt solid #ccc; margin-left: 0; padding-left: 4mm; color: #555; }
+hr { border: none; border-top: 0.5pt solid #dddddd; margin: 6mm 0; }

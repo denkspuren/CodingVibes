@@ -1,0 +1,8 @@
+// Thesis Listing 6 - Unsafe rule: X appears only in a negated literal,
+// with no positive literal to anchor it (violates the safety constraint).
+// Expected: the engine rejects it as "unsafe".
+
+paid(alice).
+unpaid_unsafe(X) :- not paid(X).
+
+//reject

@@ -1,0 +1,21 @@
+// Thesis Listing 24 - the SMST-TRANSFORMED version of Example 4.
+// After the Magic-Sets transformation the magic-seed edges create a cycle
+// through a negation edge (sup_0_2 <- not q ; q <- q_b_magic <- sup_0_2).
+// This is exactly the "ordering problem" the thesis solves with
+// Supplementary Soft Stratification. Our simpler engine has no such machinery,
+// so it correctly REJECTS the transformed program as not stratifiable --
+// which illustrates *why* combining SMST with negation is hard.
+
+p_bff_magic(1).
+b(1, 2, 3). d(2). d(3).
+
+p_bff_sup_0_1(X, Y, Z) :- p_bff_magic(X), b(X, Y, Z).
+p_bff_sup_0_2(X, Y, Z) :- p_bff_sup_0_1(X, Y, Z), not q(X).
+p_bff_sup_0_3(X, Y, Z) :- p_bff_sup_0_2(X, Y, Z), not q(Y).
+p(X, Y, Z)             :- p_bff_sup_0_3(X, Y, Z), not q(Z).
+q_b_magic(X) :- p_bff_sup_0_1(X, Y, Z).
+q_b_magic(Y) :- p_bff_sup_0_2(X, Y, Z).
+q_b_magic(Z) :- p_bff_sup_0_3(X, Y, Z).
+q(X)         :- q_b_magic(X), d(X).
+
+//reject

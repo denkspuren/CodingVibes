@@ -1,0 +1,12 @@
+// Thesis Section 2.3 - Relational evaluation of a rule (self-join + projection)
+// REPL query:  grandparent(X, Y).
+// Expected:    (alice, charlie), (alice, david)
+
+parent(alice, bob).
+parent(bob, charlie).
+parent(bob, david).
+parent(eve, frank).
+
+grandparent(X, Y) :- parent(X, Z), parent(Z, Y).
+
+//test grandparent(X, Y). => X=alice,Y=charlie ; X=alice,Y=david

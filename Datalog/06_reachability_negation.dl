@@ -1,0 +1,13 @@
+// Thesis Listing 7 - Reachability with stratified negation over a recursive
+// predicate. reachable -> stratum 0, unreachable -> stratum 1.
+// REPL query:  unreachable(X, Y).
+// Expected:    (a,a), (b,a), (b,b), (c,a), (c,b), (c,c)   [6 pairs]
+
+link("a", "b"). link("b", "c").
+node("a"). node("b"). node("c").
+
+reachable(X, Y)   :- link(X, Y).
+reachable(X, Y)   :- reachable(X, Z), link(Z, Y).
+unreachable(X, Y) :- node(X), node(Y), not reachable(X, Y).
+
+//test unreachable(X, Y). => X=a,Y=a ; X=b,Y=a ; X=b,Y=b ; X=c,Y=a ; X=c,Y=b ; X=c,Y=c

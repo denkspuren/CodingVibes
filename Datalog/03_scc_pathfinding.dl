@@ -1,0 +1,17 @@
+// Thesis Listing 3 - Mutually recursive predicates forming three SCCs
+// (edge facts taken from Table 4)
+// REPL queries:  odd_path(X, Y).   even_path(X, Y).   long_path(X, Y).
+// Expected long_path: (1,3), (2,4), (1,4)
+
+edge(1, 2). edge(2, 3). edge(3, 4).
+
+step(X, Y) :- edge(X, Y).
+
+odd_path(X, Y)  :- step(X, Y).
+odd_path(X, Y)  :- step(X, Z), even_path(Z, Y).
+even_path(X, Y) :- step(X, Z), odd_path(Z, Y).
+
+long_path(X, Y) :- even_path(X, Y).
+long_path(X, Y) :- long_path(X, Z), step(Z, Y).
+
+//test long_path(X, Y). => X=1,Y=3 ; X=2,Y=4 ; X=1,Y=4

@@ -1,0 +1,16 @@
+// Directed graph with a 3-cycle a->b->c->a and a tail c->d.
+node(a). node(b). node(c). node(d).
+edge(a, b). edge(b, c). edge(c, a). edge(c, d).
+
+path(X, Y) :- edge(X, Y).
+path(X, Y) :- edge(X, Z), path(Z, Y).
+
+in_cycle(X) :- path(X, X).        // a node that can reach itself
+has_out(X)  :- edge(X, Y).
+sink(X)     :- node(X), not has_out(X).   // negation, anchored by node(X)
+
+//test path(a, X). => X=a ; X=b ; X=c ; X=d
+
+//test in_cycle(X). => X=a ; X=b ; X=c
+
+//test sink(X). => X=d

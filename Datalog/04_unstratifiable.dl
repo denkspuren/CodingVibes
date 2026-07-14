@@ -1,0 +1,9 @@
+// Thesis Listing 5 - Recursive negation. This program is INTENTIONALLY invalid:
+// healthy and unhealthy negate each other, forming a negative cycle.
+// Expected: the engine rejects it as "not stratifiable".
+
+food("Banana").
+healthy(X)   :- food(X), not unhealthy(X).
+unhealthy(X) :- food(X), not healthy(X).
+
+//reject

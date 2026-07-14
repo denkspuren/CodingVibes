@@ -1,0 +1,29 @@
+// PROBE for stratified negation under (Supplementary) Magic Sets.  [our notation]
+//
+// Idea: both negated guards (blocked, quarantined) are DERIVED and RECURSIVE,
+// and reach their target only via LONG chains. So reach(s,x) and reach(s,h)
+// are known after 1 hop, but blocked(x) needs 4 hops and quarantined(h) needs 3.
+// A correct engine completes blocked/quarantined for the demanded nodes before
+// the anti-join fires; a premature anti-join (the Kerisit bug) admits x and h.
+//
+// REPL query:  safe(s, Y).
+// Correct answer (standard stratified semantics):  Y = g
+// Premature / buggy anti-join would instead yield:  Y = g, x, h
+//test safe(s, Y). => Y=g
+
+// s reaches x (1 hop), g (safe), h (to-be-quarantined)
+link(s, x). link(s, g). link(s, h).
+
+// danger source d reaches x only via a 4-hop chain -> x blocked LATE
+link(d, c1). link(c1, c2). link(c2, c3). link(c3, x).
+
+// quarantine source q reaches h via a 3-hop chain -> h quarantined LATE
+link(q, e1). link(e1, e2). link(e2, h).
+
+reach(X, Y) :- link(X, Y).
+reach(X, Z) :- reach(X, Y), link(Y, Z).      // left-recursive: carries the source X
+
+blocked(Y)     :- reach(d, Y).               // derived, recursive negation target
+quarantined(Y) :- reach(q, Y).               // second, independent target
+
+safe(X, Y) :- reach(X, Y), not blocked(Y), not quarantined(Y).

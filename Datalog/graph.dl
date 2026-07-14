@@ -1,0 +1,18 @@
+// ---- directed graph: a -> b -> c,  and an isolated edge d -> e ----
+node(a). node(b). node(c). node(d). node(e).
+edge(a, b). edge(b, c). edge(d, e).
+
+path(X, Y) :- edge(X, Y).
+path(X, Y) :- edge(X, Z), path(Z, Y).
+
+// stratified negation over the recursive predicate `path`
+disconnected(X, Y) :- node(X), node(Y), not path(X, Y).
+
+// ---- arithmetic / comparisons ----
+num(1). num(2). num(3). num(4). num(5).
+
+even(N)    :- num(N), 0 = N % 2.       // built-in comparison over an expression
+odd(N)     :- num(N), not even(N).     // negation of a derived predicate
+succ(N, M) :- num(N), M = N + 1.       // '=' binds M
+big(N)     :- num(N), N >= 3.          // ordering comparison
+mid(N)     :- num(N), N > 1, N < 5.    // two comparisons

@@ -1,0 +1,10 @@
+// Thesis Section 3.3 / Table 6 - Anti-join (safe rule)
+// REPL query:  unpaid(X).
+// Expected:    X = bob
+
+registered(alice). registered(bob). registered(charlie).
+paid(alice). paid(charlie).
+
+unpaid(X) :- registered(X), not paid(X).
+
+//test unpaid(X). => X=bob
