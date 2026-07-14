@@ -1,0 +1,11 @@
+// Thesis Example 2 (Listing 19) - Simplest IDB negation (one negative edge).
+// REPL query:  unknown(X).
+// Expected:    X = 2, 4
+
+seed(1). seed(3).
+node(1). node(2). node(3). node(4).
+
+known(X)   :- seed(X).
+unknown(X) :- node(X), not known(X).
+
+//test unknown(X). => X=2 ; X=4

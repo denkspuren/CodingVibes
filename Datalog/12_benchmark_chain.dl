@@ -1,0 +1,26 @@
+// Thesis Listings 29/30 - benchmark programs on a linear chain edge(i, i+1).
+// Program 1: plain transitive closure `path`.
+// Program 2: `safe_path` with an EDB negation guard. NOTE: the guard
+//            not blocked(X) constrains only the SOURCE X of a path, not the
+//            intermediate nodes (this is exactly how the thesis listing reads).
+// REPL queries:  path(0, Y).     safe_path(0, Y).     safe_path(3, Y).
+// Expected path(0, Y):        Y = 1..10       (10 solutions)
+// Expected safe_path(0, Y):   Y = 1..10       (source 0 is not blocked)
+// Expected safe_path(3, Y):   (no solutions)  (source 3 is blocked)
+
+edge(0,1). edge(1,2). edge(2,3). edge(3,4). edge(4,5).
+edge(5,6). edge(6,7). edge(7,8). edge(8,9). edge(9,10).
+
+blocked(3).
+
+path(X, Y) :- edge(X, Y).
+path(X, Y) :- path(X, Z), edge(Z, Y).
+
+safe_path(X, Y) :- edge(X, Y), not blocked(X).
+safe_path(X, Y) :- safe_path(X, Z), edge(Z, Y).
+
+//test path(0, Y). => Y=1 ; Y=2 ; Y=3 ; Y=4 ; Y=5 ; Y=6 ; Y=7 ; Y=8 ; Y=9 ; Y=10
+
+//test safe_path(0, Y). => Y=1 ; Y=2 ; Y=3 ; Y=4 ; Y=5 ; Y=6 ; Y=7 ; Y=8 ; Y=9 ; Y=10
+
+//test safe_path(3, Y). => empty

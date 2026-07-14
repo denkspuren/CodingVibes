@@ -1,0 +1,10 @@
+// Thesis Listing 2 - Transitive closure (positive Datalog, no negation)
+// REPL query:  reach(a, X).
+// Expected:    X = b, c, d
+
+edge(a, b). edge(b, c). edge(c, d).
+
+reach(X, Y) :- edge(X, Y).
+reach(X, Y) :- reach(X, Z), edge(Z, Y).
+
+//test reach(a, X). => X=b ; X=c ; X=d

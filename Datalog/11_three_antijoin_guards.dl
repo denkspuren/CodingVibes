@@ -1,0 +1,10 @@
+// Thesis Example 4 (Listing 23) - One base fact guarded by three anti-joins.
+// REPL query:  p(A, B, C).
+// Expected:    (no solutions)  -- b(1,2,3) is rejected because q(2) holds
+
+b(1, 2, 3). d(2). d(3).
+
+q(X)          :- d(X).
+p(X, Y, Z)    :- b(X, Y, Z), not q(X), not q(Y), not q(Z).
+
+//test p(A, B, C). => empty
