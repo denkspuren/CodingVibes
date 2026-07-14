@@ -1,0 +1,13 @@
+// Multi-level stratification: safe(0) -> unsafe(1) -> reach(2).
+approved(1). approved(2). approved(3).
+node(1). node(2). node(3). node(4).
+edge(1, 2). edge(2, 3). edge(3, 4). edge(1, 3).
+
+safe(X)     :- approved(X).
+unsafe(X)   :- node(X), not safe(X).
+reach(X, Y) :- edge(X, Y), not unsafe(Y).
+reach(X, Z) :- reach(X, Y), edge(Y, Z), not unsafe(Z).
+
+//test unsafe(X). => X=4
+
+//test reach(1, Y). => Y=2 ; Y=3

@@ -1,0 +1,20 @@
+// Family knowledge base: facts, joins, recursion, and an inequality guard.
+parent(alice, bob).
+parent(alice, carol).
+parent(bob, dave).
+parent(carol, eve).
+parent(dave, frank).
+
+grandparent(X, Y) :- parent(X, Z), parent(Z, Y).
+sibling(X, Y)     :- parent(P, X), parent(P, Y), X != Y.
+
+ancestor(X, Y) :- parent(X, Y).
+ancestor(X, Y) :- parent(X, Z), ancestor(Z, Y).
+
+//test grandparent(alice, X). => X=dave ; X=eve
+
+//test sibling(bob, X). => X=carol
+
+//test ancestor(alice, X). => X=bob ; X=carol ; X=dave ; X=eve ; X=frank
+
+//test ancestor(X, frank). => X=dave ; X=bob ; X=alice

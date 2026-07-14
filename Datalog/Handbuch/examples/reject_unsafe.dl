@@ -1,0 +1,5 @@
+// Invalid: X in a negated literal is not anchored by a positive literal.
+paid(alice).
+broke(X) :- not paid(X).
+
+//reject
